@@ -1,0 +1,42 @@
+class BranchAndBoundMazeSolver:
+    def __init__(self, maze):
+        self.maze = maze
+        self.rows = len(maze)
+        self.cols = len(maze[0])
+
+    def is_valid_move(self, x, y):
+        return 0 <= x < self.rows and 0 <= y < self.cols and self.maze[x][y] == 0
+
+    def solve(self, x, y, path_cost, min_cost):
+        if x == self.rows - 1 and y == self.cols - 1:
+            return True  # Reached the destination
+
+        if self.is_valid_move(x, y):
+            # Mark the current cell as visited
+            self.maze[x][y] = 1
+
+            # Explore all possible directions
+            if self.solve(x + 1, y, path_cost + 1, min_cost) or \
+               self.solve(x, y + 1, path_cost + 1, min_cost):
+                return True
+
+            # If none of the directions lead to the destination, backtrack
+            self.maze[x][y] = 0
+            return False
+
+        return False
+
+
+# Example usage for Branch and Bound Algorithm
+maze_branch_and_bound = [
+    [0, 1, 0, 0, 0],
+    [0, 1, 0, 1, 0],
+    [0, 0, 0, 1, 0],
+    [1, 1, 1, 1, 0],
+    [0, 0, 0, 0, 0]
+]
+
+branch_and_bound_solver = BranchAndBoundMazeSolver(maze_branch_and_bound)
+branch_and_bound_success = branch_and_bound_solver.solve(0, 0, 0, 0)
+
+print(f"Branch and Bound Algorithm - Success: {branch_and_bound_success}")
